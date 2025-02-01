@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Oppgave 2</title>
+  </head>
+  <body>
+    <div>
+      <!--  LEGG TIL HTML-koden som trengs for å løse oppgaven! -->
+      <!-- /* KANDITAT NR 308 */ -->
+
+      <h3>Legg til filmer</h3>
+      <div>
+        <span>Tittel:</span>
+        <input type="text" placeholder="" id="title-input-field" />
+        <span>Kategori:</span>
+        <input type="text" placeholder="" id="category-input-field" />
+      </div>
+      <br />
+      <div id="film-counter">Antall filmer i array: 0</div>
+      <br />
+      <div id="error-container">Ingen feilmeldinger enda.</div>
+      <br />
+      <input type="button" value="Legg til film i array" id="add-movie-btn" />
+      <input
+        type="button"
+        value="Vis alle filmene som er lagt til i array"
+        id="show-all-movie-btn"
+      />
+      <input type="button" value="Slett alle filmer" id="delete-movies-btn" />
+
+      <div id="output-container"></div>
+    </div>
+
+    <script>
+      // HER SKAL DU KODE JAVASCRIPT (IKKE I EKSTERN FIL)!
+
+      const titleInputField = document.getElementById("title-input-field");
+      const categoryInputField = document.getElementById(
+        "category-input-field"
+      );
+      const filmCounter = document.getElementById("film-counter");
+      const errorContainer = document.getElementById("error-container");
+      const addMovieBtn = document.getElementById("add-movie-btn");
+      const showAllMovieBtn = document.getElementById("show-all-movie-btn");
+      const outputContainer = document.getElementById("output-container");
+      const deleteMoviesBtn = document.getElementById("delete-movies-btn");
+
+      const movieArray = [];
+
+      let movieCounter = 0;
+
+      //https://developer.mozilla.org/en-US/docs/Web/API/Window/setTimeout
+      //brukte linken ovenfor for å forstå setTimeout()
+      function errorMessage(message, duration) {
+        errorContainer.innerHTML = message;
+        errorContainer.style.color = "red";
+        setTimeout(() => {
+          errorContainer.innerHTML = `Ingen feilmeldinger enda.`;
+          errorContainer.style.color = "black";
+        }, duration);
+      }
+
+      const errorMessageTxt = `Denne feilmeldingen tilbakestilles om 3 sekunder`;
+
+      function addMovieArray() {
+        const userInputTitle = titleInputField.value;
+        const userInputCategory = categoryInputField.value;
+        if (userInputTitle !== "" && userInputCategory !== "") {
+          movieArray.push({
+            title: `${userInputTitle}`,
+            category: `${userInputCategory}`,
+          });
+          console.log(movieArray);
+          movieCounter++;
+
+          filmCounter.innerHTML = `Antall filmer i array: ${movieCounter}, siste film lagt til: ${userInputTitle}`;
+
+          titleInputField.value = "";
+          categoryInputField.value = "";
+        } else {
+          errorMessage(
+            `FEIL: Fyll ut både tittel og kategori! ${errorMessageTxt}.`,
+            3000
+          );
+        }
+      }
+
+      function showAllMovies() {
+        outputContainer.innerHTML = "";
+        for (let i = 0; i < movieArray.length; i++) {
+          outputContainer.innerHTML += `
+         <h2><b> ${movieArray[i].title}</b></h2> <p>${movieArray[i].category}</p>
+         `;
+        }
+        if (movieArray.length == 0) {
+          errorMessage(
+            `FEIL: Du har ikke lagt til noen filmer enda! ${errorMessageTxt}.`,
+            3000
+          );
+        }
+      }
+
+      //tilleggsfunksjon
+      function deleteMovies() {
+        if (movieArray.length == 0) {
+          errorMessage(
+            `FEIL: Ingenting ble slettet. Du har ikke lagt til noen filmer enda! ${errorMessageTxt}.`,
+            3000
+          );
+        } else {
+          movieArray.length = 0;
+          movieCounter = 0;
+          filmCounter.innerHTML = `Antall filmer i array: ${movieCounter}`;
+          outputContainer.innerHTML = "";
+          alert(`Alle filmer ble slettet.`);
+        }
+      }
+
+      addMovieBtn.onclick = addMovieArray;
+      showAllMovieBtn.onclick = showAllMovies;
+      deleteMoviesBtn.onclick = deleteMovies;
+    </script>
+  </body>
+</html>

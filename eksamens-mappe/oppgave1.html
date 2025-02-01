@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Baby vil ha...</title>
+    <style>
+      /*IKKE LOV Å ENDRE CSS!*/
+      #container {
+        position: relative;
+        width: 800px;
+        height: 550px;
+        border: 1px solid rgb(30, 30, 30);
+        margin: auto;
+      }
+      img {
+        position: absolute;
+      }
+      .syot {
+        height: 150px;
+      }
+      #jlpb {
+        bottom: 0;
+        left: 300px;
+      }
+      #inp {
+        position: absolute;
+        left: 250px;
+      }
+      span,
+      input,
+      button {
+        font-size: 1.3rem;
+      }
+      /*IKKE LOV Å ENDRE CSS!*/
+    </style>
+  </head>
+  <body>
+    <!-- IKKE LOV Å ENDRE NOE SOM HELST AV DENNE HTML'en! -->
+    <div id="container">
+      <img id="jlpb" src="images/jlpb.png" />
+      <img id="tac-x" src="images/cat.png" class="syot" />
+      <img id="eddap-x" src="images/eskilpadde.png" class="syot" />
+      <img id="gnidliub-x" src="images/building-2.png" class="syot" />
+      <div id="inp">
+        <input id="gft-txt" type="text" placeholder="Hva vil du gi babyen?" />
+        <button id="give-gft-btn">Gi babyen det i tekstboksen</button>
+        <br />
+        <span id="llatna-x">Antall ting igjen å gi babyen: 3</span>
+      </div>
+    </div>
+    <!-- IKKE LOV Å ENDRE NOE SOM HELST AV DENNE HTML'en! -->
+
+    <script>
+      // HER SKAL DU/DERE KODE JAVASCRIPT (IKKE I EKSTERN FIL)!
+
+      // bottom brukes for vertikal flytting - ref. JS for å stilsette elementer
+      /* KANDITAT NR 308 */
+
+      const inputField = document.getElementById("gft-txt");
+      const giftConfirmBtn = document.getElementById("give-gft-btn");
+      const giftRemainCounter = document.getElementById("llatna-x");
+
+      const giftsArray = [
+        {
+          name: "katt",
+          img: document.getElementById("tac-x"),
+          status: false,
+        },
+        {
+          name: "skilpadde",
+          img: document.getElementById("eddap-x"),
+          status: false,
+        },
+        {
+          name: "hus",
+          img: document.getElementById("gnidliub-x"),
+          status: false,
+        },
+      ];
+      let remainGift = 3;
+      let currentLeft = 200;
+
+      //Parameteren giftImg blir sendt og representerer bilde som skal flyttes
+      // + 180px for hvert bilde lagt til for å spre gavene til babyen
+      function giftMover(giftImg) {
+        giftImg.style.bottom = "10px";
+        giftImg.style.left = `${currentLeft}px`;
+        currentLeft += 180;
+      }
+      /* Tilleggsfunksjon
+      /* Inpsirasjon til location.reload() https://developer.mozilla.org/en-US/docs/Web/API/Location/reload */
+      function resetButton() {
+        const resetButton = document.createElement("button");
+        resetButton.textContent = "Restart spill";
+        resetButton.onclick = function () {
+          location.reload();
+        };
+        document.body.appendChild(resetButton);
+      }
+
+      function victoryChecker() {
+        const filteredGifts = giftsArray.filter((gift) => gift.status == true);
+        if (filteredGifts.length == giftsArray.length) {
+          inputField.remove();
+          giftConfirmBtn.remove();
+          giftRemainCounter.innerHTML = `Babyen er meget fornøyd med de 3 gavene! :)`;
+          giftRemainCounter.style.color = "red";
+          giftRemainCounter.style.fontSize = "3rem";
+          resetButton();
+        }
+      }
+
+      function giveBabyGift() {
+        const userInput = inputField.value.toLowerCase();
+        if (inputField.value == "") {
+          alert("Du må skrive noe inn i tekstboken.");
+        } else {
+          inputField.value = "";
+          let giftFound = false;
+          for (let i = 0; i < giftsArray.length; i++) {
+            if (giftsArray[i].name == userInput) {
+              giftFound = true;
+              if (giftsArray[i].status == false) {
+                //kaller giftmover med img valgt fra giftsArray[i]
+                giftMover(giftsArray[i].img);
+                giftsArray[i].status = true;
+                remainGift--;
+                giftRemainCounter.innerHTML = `
+                Antall ting igjen å gi babyen: ${remainGift}!
+                <br>
+                Du må gi alle 3 gaver til babyen!
+                `;
+              } else {
+                alert(`Du har allerede gitt gaven ${userInput} til babyen`);
+              }
+            }
+          }
+          if (giftFound == false) {
+            alert(`${userInput} er ikke blant de 3 gavene du kan gi babyen!`);
+          }
+          victoryChecker();
+        }
+      }
+
+      giftConfirmBtn.onclick = giveBabyGift;
+    </script>
+  </body>
+</html>
